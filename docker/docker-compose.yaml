@@ -1,0 +1,30 @@
+services:
+  k6:
+    build:
+      context: .
+    platform: linux/amd64
+    ports:
+      - "5665:5665"
+    volumes:
+      - "./../src:/src"
+    depends_on:
+      wiremock:
+        condition: service_healthy
+    tty: true
+    command: ["run", "--out", "dashboard=period=2s", "/src/loadtest.js"]
+
+  wiremock:
+    image: wiremock/wiremock:latest
+    # ports:
+    #   - "8080:8080"
+    # command: ["--verbose"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/__admin/health"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+      start_period: 3s
+    volumes:
+      - ../http-mock:/home/wiremock/mappings
+      # Mock with faster response to workaround problem
+      # - ../http-mock/faster-response:/home/wiremock/mappings

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/payload"
+  },
+  "response": {
+    "status": 200,
+    "fixedDelayMilliseconds": 2000,
+    "jsonBody": {
+      "foo": "bar"
+    }
+  }
+}
